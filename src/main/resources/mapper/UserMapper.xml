@@ -21,220 +21,14 @@
     <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="wx_open_id" jdbcType="VARCHAR" property="wxOpenId" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--@mbg.generated-->
-    id, username, `password`, real_name, unit_id, `position`, id_card, gender, 
-    phone, email, avatar, `enable`, create_time, update_time, last_login_time, is_deleted, 
-    token
+    id, username, `password`, real_name, unit_id, `position`, id_card, gender, phone, 
+    email, avatar, `enable`, create_time, update_time, last_login_time, is_deleted, token, 
+    wx_open_id
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    <!--@mbg.generated-->
-    select 
-    <include refid="Base_Column_List" />
-    from `user`
-    where id = #{id,jdbcType=BIGINT}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
-    <!--@mbg.generated-->
-    delete from `user`
-    where id = #{id,jdbcType=BIGINT}
-  </delete>
-  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.xiao.dao.User" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into `user` (username, `password`, 
-      real_name, unit_id, `position`, 
-      id_card, gender, phone, 
-      email, avatar, `enable`, 
-      create_time, update_time, last_login_time, 
-      is_deleted, token)
-    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{realName,jdbcType=VARCHAR}, #{unitId,jdbcType=BIGINT}, #{position,jdbcType=VARCHAR}, 
-      #{idCard,jdbcType=VARCHAR}, #{gender,jdbcType=TINYINT}, #{phone,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, #{enable,jdbcType=BIT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
-      #{isDeleted,jdbcType=BIT}, #{token,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.xiao.dao.User" useGeneratedKeys="true">
-    <!--@mbg.generated-->
-    insert into `user`
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="username != null and username != ''">
-        username,
-      </if>
-      <if test="password != null and password != ''">
-        `password`,
-      </if>
-      <if test="realName != null and realName != ''">
-        real_name,
-      </if>
-      <if test="unitId != null">
-        unit_id,
-      </if>
-      <if test="position != null and position != ''">
-        `position`,
-      </if>
-      <if test="idCard != null and idCard != ''">
-        id_card,
-      </if>
-      <if test="gender != null">
-        gender,
-      </if>
-      <if test="phone != null and phone != ''">
-        phone,
-      </if>
-      <if test="email != null and email != ''">
-        email,
-      </if>
-      <if test="avatar != null and avatar != ''">
-        avatar,
-      </if>
-      <if test="enable != null">
-        `enable`,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="lastLoginTime != null">
-        last_login_time,
-      </if>
-      <if test="isDeleted != null">
-        is_deleted,
-      </if>
-      <if test="token != null and token != ''">
-        token,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="username != null and username != ''">
-        #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null and password != ''">
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="realName != null and realName != ''">
-        #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="unitId != null">
-        #{unitId,jdbcType=BIGINT},
-      </if>
-      <if test="position != null and position != ''">
-        #{position,jdbcType=VARCHAR},
-      </if>
-      <if test="idCard != null and idCard != ''">
-        #{idCard,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="phone != null and phone != ''">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null and email != ''">
-        #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="avatar != null and avatar != ''">
-        #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="enable != null">
-        #{enable,jdbcType=BIT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastLoginTime != null">
-        #{lastLoginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isDeleted != null">
-        #{isDeleted,jdbcType=BIT},
-      </if>
-      <if test="token != null and token != ''">
-        #{token,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.xiao.dao.User">
-    <!--@mbg.generated-->
-    update `user`
-    <set>
-      <if test="username != null and username != ''">
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null and password != ''">
-        `password` = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="realName != null and realName != ''">
-        real_name = #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="unitId != null">
-        unit_id = #{unitId,jdbcType=BIGINT},
-      </if>
-      <if test="position != null and position != ''">
-        `position` = #{position,jdbcType=VARCHAR},
-      </if>
-      <if test="idCard != null and idCard != ''">
-        id_card = #{idCard,jdbcType=VARCHAR},
-      </if>
-      <if test="gender != null">
-        gender = #{gender,jdbcType=TINYINT},
-      </if>
-      <if test="phone != null and phone != ''">
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null and email != ''">
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="avatar != null and avatar != ''">
-        avatar = #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="enable != null">
-        `enable` = #{enable,jdbcType=BIT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="lastLoginTime != null">
-        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="isDeleted != null">
-        is_deleted = #{isDeleted,jdbcType=BIT},
-      </if>
-      <if test="token != null and token != ''">
-        token = #{token,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.xiao.dao.User">
-    <!--@mbg.generated-->
-    update `user`
-    set username = #{username,jdbcType=VARCHAR},
-      `password` = #{password,jdbcType=VARCHAR},
-      real_name = #{realName,jdbcType=VARCHAR},
-      unit_id = #{unitId,jdbcType=BIGINT},
-      `position` = #{position,jdbcType=VARCHAR},
-      id_card = #{idCard,jdbcType=VARCHAR},
-      gender = #{gender,jdbcType=TINYINT},
-      phone = #{phone,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
-      avatar = #{avatar,jdbcType=VARCHAR},
-      `enable` = #{enable,jdbcType=BIT},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP},
-      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
-      is_deleted = #{isDeleted,jdbcType=BIT},
-      token = #{token,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=BIGINT}
-  </update>
   <update id="updateBatch" parameterType="java.util.List">
     <!--@mbg.generated-->
     update `user`
@@ -319,6 +113,11 @@
           when id = #{item.id,jdbcType=BIGINT} then #{item.token,jdbcType=VARCHAR}
         </foreach>
       </trim>
+      <trim prefix="wx_open_id = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=BIGINT} then #{item.wxOpenId,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
     </trim>
     where id in
     <foreach close=")" collection="list" item="item" open="(" separator=", ">
@@ -328,25 +127,26 @@
   <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into `user`
-    (username, `password`, police_id, real_name, unit_id, `position`, id_card, gender, 
-      phone, email, avatar, `enable`, create_time, update_time, last_login_time, is_deleted, 
-      token)
+    (username, `password`, real_name, unit_id, `position`, id_card, gender, phone, email, 
+      avatar, `enable`, create_time, update_time, last_login_time, is_deleted, token, 
+      wx_open_id)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.username,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, #{item.policeId,jdbcType=VARCHAR}, 
-        #{item.realName,jdbcType=VARCHAR}, #{item.unitId,jdbcType=BIGINT}, #{item.position,jdbcType=VARCHAR}, 
-        #{item.idCard,jdbcType=VARCHAR}, #{item.gender,jdbcType=TINYINT}, #{item.phone,jdbcType=VARCHAR}, 
-        #{item.email,jdbcType=VARCHAR}, #{item.avatar,jdbcType=VARCHAR}, #{item.enable,jdbcType=BIT}, 
-        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.lastLoginTime,jdbcType=TIMESTAMP}, 
-        #{item.isDeleted,jdbcType=BIT}, #{item.token,jdbcType=VARCHAR})
+      (#{item.username,jdbcType=VARCHAR}, #{item.password,jdbcType=VARCHAR}, #{item.realName,jdbcType=VARCHAR}, 
+        #{item.unitId,jdbcType=BIGINT}, #{item.position,jdbcType=VARCHAR}, #{item.idCard,jdbcType=VARCHAR}, 
+        #{item.gender,jdbcType=TINYINT}, #{item.phone,jdbcType=VARCHAR}, #{item.email,jdbcType=VARCHAR}, 
+        #{item.avatar,jdbcType=VARCHAR}, #{item.enable,jdbcType=BIT}, #{item.createTime,jdbcType=TIMESTAMP}, 
+        #{item.updateTime,jdbcType=TIMESTAMP}, #{item.lastLoginTime,jdbcType=TIMESTAMP}, 
+        #{item.isDeleted,jdbcType=BIT}, #{item.token,jdbcType=VARCHAR}, #{item.wxOpenId,jdbcType=VARCHAR}
+        )
     </foreach>
   </insert>
   <insert id="batchInsertSelectiveUseDefaultForNull" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into `user`
-    (username, `password`, police_id, real_name, unit_id, `position`, id_card, gender, 
-      phone, email, avatar, `enable`, create_time, update_time, last_login_time, is_deleted, 
-      token)
+    (username, `password`, real_name, unit_id, `position`, id_card, gender, phone, email, 
+      avatar, `enable`, create_time, update_time, last_login_time, is_deleted, token, 
+      wx_open_id)
     values
     <foreach collection="list" item="item" separator=",">
       (
@@ -362,15 +162,6 @@
       <choose>
         <when test="item.password != null">
           #{item.password,jdbcType=VARCHAR},
-        </when>
-        <!--@ignoreSql-->
-        <otherwise>
-          DEFAULT,
-        </otherwise>
-      </choose>
-      <choose>
-        <when test="item.policeId != null">
-          #{item.policeId,jdbcType=VARCHAR},
         </when>
         <!--@ignoreSql-->
         <otherwise>
@@ -496,7 +287,16 @@
       </choose>
       <choose>
         <when test="item.token != null">
-          #{item.token,jdbcType=VARCHAR}
+          #{item.token,jdbcType=VARCHAR},
+        </when>
+        <!--@ignoreSql-->
+        <otherwise>
+          DEFAULT,
+        </otherwise>
+      </choose>
+      <choose>
+        <when test="item.wxOpenId != null">
+          #{item.wxOpenId,jdbcType=VARCHAR}
         </when>
         <!--@ignoreSql-->
         <otherwise>
@@ -506,7 +306,7 @@
       )
     </foreach>
   </insert>
-  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="com.xiao.dao.User" useGeneratedKeys="true">
+  <insert id="insertOnDuplicateUpdate" keyColumn="id" keyProperty="id" parameterType="com.xiao.dao.User" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into `user`
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -529,6 +329,7 @@
       last_login_time,
       is_deleted,
       token,
+      wx_open_id,
     </trim>
     values
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -551,6 +352,7 @@
       #{lastLoginTime,jdbcType=TIMESTAMP},
       #{isDeleted,jdbcType=BIT},
       #{token,jdbcType=VARCHAR},
+      #{wxOpenId,jdbcType=VARCHAR},
     </trim>
     on duplicate key update 
     <trim suffixOverrides=",">
@@ -573,9 +375,10 @@
       last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
       is_deleted = #{isDeleted,jdbcType=BIT},
       token = #{token,jdbcType=VARCHAR},
+      wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
     </trim>
   </insert>
-  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.xiao.dao.User" useGeneratedKeys="true">
+  <insert id="insertOnDuplicateUpdateSelective" keyColumn="id" keyProperty="id" parameterType="com.xiao.dao.User" useGeneratedKeys="true">
     <!--@mbg.generated-->
     insert into `user`
     <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -629,6 +432,9 @@
       </if>
       <if test="token != null and token != ''">
         token,
+      </if>
+      <if test="wxOpenId != null and wxOpenId != ''">
+        wx_open_id,
       </if>
     </trim>
     values
@@ -684,6 +490,9 @@
       <if test="token != null and token != ''">
         #{token,jdbcType=VARCHAR},
       </if>
+      <if test="wxOpenId != null and wxOpenId != ''">
+        #{wxOpenId,jdbcType=VARCHAR},
+      </if>
     </trim>
     on duplicate key update 
     <trim suffixOverrides=",">
@@ -696,7 +505,6 @@
       <if test="password != null and password != ''">
         `password` = #{password,jdbcType=VARCHAR},
       </if>
-
       <if test="realName != null and realName != ''">
         real_name = #{realName,jdbcType=VARCHAR},
       </if>
@@ -738,6 +546,9 @@
       </if>
       <if test="token != null and token != ''">
         token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenId != null and wxOpenId != ''">
+        wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>

@@ -185,17 +185,19 @@ CREATE TABLE `user`  (
   `last_login_time` datetime NULL DEFAULT NULL COMMENT '最后登录时间',
   `is_deleted` bit(1) NOT NULL COMMENT '是否删除',
   `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '登陆成功token',
+  `wx_open_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT NULL COMMENT '微信登录openId',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `username`(`username` ASC) USING BTREE,
-  UNIQUE INDEX `idx_username`(`username` ASC) USING BTREE
+  UNIQUE INDEX `idx_username`(`username` ASC) USING BTREE,
+  UNIQUE INDEX `idx_wx_open_id`(`wx_open_id` ASC) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, '1', '1', '1', 1, '1', '1', 1, '15286610576', '1', '1', b'1', '1970-01-03 00:00:00', '2025-04-11 14:44:41', '2025-12-28 12:45:11', b'0', '259a8f15-5cc6-4cf8-90e8-e93b404d6366');
-INSERT INTO `user` VALUES (2, '323', '1', '1', 1, '1', '1', 1, '15286610576', '1', '1', b'0', '1970-01-03 00:00:00', '2025-04-11 16:13:25', '1970-01-02 00:00:00', b'1', NULL);
-INSERT INTO `user` VALUES (4, 'aaa', '114514', '', 0, '', '', 0, '19352311776', '', '', b'1', '2025-12-28 13:44:04', '2025-12-28 13:44:04', '2025-12-28 13:44:10', b'0', '2e75f35d-9170-4956-81f5-1edf5766faea');
+INSERT INTO `user` VALUES (1, '1', '1', '1', 1, '1', '1', 1, '15286610576', '1', '1', b'1', '1970-01-03 00:00:00', '2025-04-11 14:44:41', '2025-12-28 12:45:11', b'0', '259a8f15-5cc6-4cf8-90e8-e93b404d6366', NULL);
+INSERT INTO `user` VALUES (2, '323', '1', '1', 1, '1', '1', 1, '15286610576', '1', '1', b'0', '1970-01-03 00:00:00', '2025-04-11 16:13:25', '1970-01-02 00:00:00', b'1', NULL, NULL);
+INSERT INTO `user` VALUES (4, 'aaa', '114514', '', 0, '', '', 0, '19352311776', '', '', b'1', '2025-12-28 13:44:04', '2025-12-28 13:44:04', '2025-12-28 13:44:10', b'0', '2e75f35d-9170-4956-81f5-1edf5766faea', NULL);
 
 -- ----------------------------
 -- Table structure for user_role

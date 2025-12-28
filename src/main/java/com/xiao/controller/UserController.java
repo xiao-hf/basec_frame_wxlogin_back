@@ -3,8 +3,7 @@ package com.xiao.controller;
 import com.xiao.common.AjaxResult;
 import com.xiao.common.annotation.Log;
 import com.xiao.common.dto.UserDto;
-import com.xiao.http.req.ReqLogin;
-import com.xiao.http.req.ReqRegister;
+import com.xiao.http.req.ReqWxLogin;
 import com.xiao.service.UserService;
 import com.xiao.utils.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,15 +37,8 @@ public class UserController {
     @Operation(summary = "登录")
     @PostMapping("/login")
     @Log(module = "登录")
-    public AjaxResult<String> login(@RequestBody @Valid ReqLogin req) {
+    public AjaxResult<String> login(@RequestBody @Valid ReqWxLogin req) {
         return userService.login(req);
-    }
-
-    @Operation(summary = "注册")
-    @PostMapping("/register")
-    @Log(module = "注册")
-    public AjaxResult<String> register(@RequestBody @Valid ReqRegister req) {
-        return userService.register(req);
     }
 
     @Operation(summary = "退出")

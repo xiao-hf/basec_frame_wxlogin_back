@@ -13,8 +13,7 @@ import com.xiao.dao.Role;
 import com.xiao.dao.RolePermission;
 import com.xiao.dao.User;
 import com.xiao.dao.UserRole;
-import com.xiao.http.req.ReqLogin;
-import com.xiao.http.req.ReqRegister;
+import com.xiao.http.req.ReqWxLogin;
 import com.xiao.mapper.PermissionMapper;
 import com.xiao.mapper.RoleMapper;
 import com.xiao.mapper.RolePermissionMapper;
@@ -69,50 +68,52 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AjaxResult<String> login(ReqLogin req) {
+    public AjaxResult<String> login(ReqWxLogin req) {
         Date now = new Date();
-        int type = Integer.parseInt(req.getType());
-        String phone = req.getPhone();
-        String code = req.getCode();
-        List<User> users = userMapper.selectList(
+        String openId = req.getOpenId();
+
+        User user = userMapper.selectOne(
             Wrappers.<User>lambdaQuery()
-                .eq(User::getPhone, phone)
-                .eq(User::getIsDeleted, false)
+                .eq(User::getWxOpenId, openId)
+                .last("LIMIT 1")
         );
-        // 1.排除错误情况
-        if (users.isEmpty()) {
-            return AjaxResult.error("用户不存在");
+
+        // 1) 不存在则创建用户，并分配 USER 角色
+        if (user == null) {
+            user = createWxUser(openId, now);
+            assignUserRoleIfAbsent(user.getId(), now);
+        } else if (Boolean.TRUE.equals(user.getIsDeleted())) {
+            user.setIsDeleted(false);
+            user.setUpdateTime(now);
+            userMapper.updateById(user);
         }
-        User user = users.get(0);
-        String preToken = user.getToken();
-        Long userId = user.getId();
-        if (!user.getEnable()) {
+
+        if (!Boolean.TRUE.equals(user.getEnable())) {
             return AjaxResult.error("用户未启用");
         }
-        if (type == 1 && !code.equals(user.getPassword())) { // 密码登录
-            return AjaxResult.error("密码错误!");
-        } else if (type == 2) {
-            String key = RedisPrefix.LOGIN_CODE + phone;
-            if (!redisUtil.contains(key)) {
-                return AjaxResult.error("验证码已失效!");
-            }
-            if (!code.equals(redisUtil.get(key))) {
-                return AjaxResult.error("验证码错误");
-            }
-        }
-        // 2.封装UserDto存入redis
+
+        String preToken = user.getToken();
+        Long userId = user.getId();
+
+        // 2) 封装 UserDto 并加载角色权限
         UserDto userDto = BeanUtil.copyProperties(user, UserDto.class);
         List<UserRole> userRoles = userRoleMapper.selectList(
             Wrappers.<UserRole>lambdaQuery().eq(UserRole::getUserId, userId)
         );
         if (userRoles.isEmpty()) {
-            return AjaxResult.error("该用户未分配角色!");
+            assignUserRoleIfAbsent(userId, now);
+            userRoles = userRoleMapper.selectList(
+                Wrappers.<UserRole>lambdaQuery().eq(UserRole::getUserId, userId)
+            );
+        }
+        if (userRoles.isEmpty()) {
+            return AjaxResult.error("用户角色缺失");
         }
         UserRole userRole = userRoles.get(0);
         Long roleId = userRole.getRoleId();
         Role role = roleMapper.selectById(roleId);
         if (role == null) {
-            return AjaxResult.error("该用户角色不存在!");
+            return AjaxResult.error("用户角色不存在");
         }
         RoleDto roleDto = BeanUtil.copyProperties(role, RoleDto.class);
         List<RolePermission> rolePermissions = rolePermissionMapper.selectList(
@@ -130,19 +131,27 @@ public class UserServiceImpl implements UserService {
         userDto.setRoleDto(roleDto);
         String token = IdUtil.randomUUID();
         userDto.setToken(token);
-        // 3.更新数据库user token和登陆时间
+
+        // 3) 更新数据库 user token 和登录时间
         user.setToken(token);
         user.setLastLoginTime(now);
+        user.setUpdateTime(now);
         userMapper.updateById(user);
-        // 4.生成token  authorization->token->UserDto
+        userDto.setLastLoginTime(now);
+        userDto.setUpdateTime(now);
+
+        // 4) 生成 token：authorization -> token -> UserDto
         String authorization = JwtUtil.geneAuth(userDto);
         String key = RedisPrefix.LOGIN_TOKEN + token;
         redisUtil.set(key, userDto);
-        // 5.设置UserDto到Security上下文
+
+        // 5) 设置 UserDto 到 Security 上下文
         SecurityUtil.setUser(userDto);
-        // 6.清除验证码和之前登录缓存
-        redisUtil.del(key);
-        redisUtil.del(RedisPrefix.LOGIN_TOKEN + preToken);
+
+        // 6) 清理之前登录缓存
+        if (preToken != null && !preToken.isBlank()) {
+            redisUtil.del(RedisPrefix.LOGIN_TOKEN + preToken);
+        }
         return AjaxResult.success(authorization);
     }
 
@@ -154,64 +163,45 @@ public class UserServiceImpl implements UserService {
         return AjaxResult.success("退出成功!");
     }
 
-    @Override
-    public AjaxResult<String> register(ReqRegister req) {
-        String phone = req.getPhone();
-        String username = req.getUsername();
-        String password = req.getPassword();
-        String code = req.getCode();
-        String redisKey = RedisPrefix.LOGIN_CODE + phone;
-        if (!redisUtil.contains(redisKey)) {
-            return AjaxResult.error("验证码已失效，请重新获取");
-        }
-        Object cachedCode = redisUtil.get(redisKey);
-        if (!(cachedCode instanceof String) || !code.equals(cachedCode)) {
-            return AjaxResult.error("验证码错误");
-        }
-
-        // 唯一校验：用户名/手机号不得重复
-        long exists = userMapper.selectCount(
-            Wrappers.<User>lambdaQuery()
-                .eq(User::getUsername, username)
-                .or()
-                .eq(User::getPhone, phone)
-        );
-        if (exists > 0) {
-            return AjaxResult.error("用户名或手机号已存在");
-        }
-
-        Date now = new Date();
+    private User createWxUser(String openId, Date now) {
         User user = new User();
-        user.setUsername(username);
-        user.setPhone(phone);
-        user.setPassword(password);
-        user.setRealName(req.getRealName());
-        user.setUnitId(req.getUnitId());
-        user.setPosition(req.getPosition());
-        user.setIdCard(req.getIdCard());
-        user.setGender(req.getGender());
-        user.setEmail(req.getEmail());
-        user.setAvatar(req.getAvatar());
+        user.setWxOpenId(openId);
+        user.setUsername(buildWxUsername(openId));
+        user.setPassword(IdUtil.randomUUID());
+        user.setRealName("");
+        user.setUnitId(0L);
         user.setEnable(true);
         user.setCreateTime(now);
         user.setUpdateTime(now);
         user.setIsDeleted(false);
         userMapper.insert(user);
+        return user;
+    }
 
-        // 给新用户分配 USER 角色
+    private String buildWxUsername(String openId) {
+        String username = "wx_" + openId;
+        return username.length() <= 50 ? username : username.substring(0, 50);
+    }
+
+    private void assignUserRoleIfAbsent(Long userId, Date now) {
+        long exists = userRoleMapper.selectCount(
+            Wrappers.<UserRole>lambdaQuery().eq(UserRole::getUserId, userId)
+        );
+        if (exists > 0) {
+            return;
+        }
+
         Role userRoleEntity = roleMapper.selectOne(
             Wrappers.<Role>lambdaQuery().eq(Role::getRoleCode, RoleEnum.USER.getCode())
         );
-        if (userRoleEntity != null) {
-            UserRole relation = new UserRole();
-            relation.setUserId(user.getId());
-            relation.setRoleId(userRoleEntity.getId());
-            relation.setCreateTime(now);
-            userRoleMapper.insert(relation);
+        if (userRoleEntity == null) {
+            return;
         }
 
-        // 注册成功清理验证码
-        redisUtil.del(redisKey);
-        return AjaxResult.success("注册成功");
+        UserRole relation = new UserRole();
+        relation.setUserId(userId);
+        relation.setRoleId(userRoleEntity.getId());
+        relation.setCreateTime(now);
+        userRoleMapper.insert(relation);
     }
 }
