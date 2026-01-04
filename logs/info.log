@@ -111,3 +111,13 @@
 2025-12-30 02:01:26.457 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
 2025-12-30 02:01:28.894 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-9999"]
 2025-12-30 02:01:28.928 [main] INFO  c.x.SpringSecurityDemoApplication - [logStarted,56] - Started SpringSecurityDemoApplication in 6.509 seconds (process running for 7.47)
+2026-01-04 18:10:30.308 [background-preinit] INFO  o.h.v.i.util.Version - [<clinit>,21] - HV000001: Hibernate Validator 8.0.1.Final
+2026-01-04 18:10:30.439 [main] INFO  c.x.SpringSecurityDemoApplication - [logStarting,50] - Starting SpringSecurityDemoApplication using Java 17.0.14 with PID 31336 (D:\A_接单\剪纸毕设_2000_已付1000\新建文件夹\basec_frame_wxlogin_back\target\classes started by Administrator in D:\A_接单\剪纸毕设_2000_已付1000\新建文件夹\basec_frame_wxlogin_back)
+2026-01-04 18:10:30.446 [main] INFO  c.x.SpringSecurityDemoApplication - [logStartupProfileInfo,654] - No active profile set, falling back to 1 default profile: "default"
+2026-01-04 18:10:33.712 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Initializing ProtocolHandler ["http-nio-9999"]
+2026-01-04 18:10:33.715 [main] INFO  o.a.c.c.StandardService - [log,173] - Starting service [Tomcat]
+2026-01-04 18:10:33.715 [main] INFO  o.a.c.c.StandardEngine - [log,173] - Starting Servlet engine: [Apache Tomcat/10.1.19]
+2026-01-04 18:10:33.799 [main] INFO  o.a.c.c.C.[.[.[/] - [log,173] - Initializing Spring embedded WebApplicationContext
+2026-01-04 18:10:36.758 [main] INFO  o.a.c.h.Http11NioProtocol - [log,173] - Starting ProtocolHandler ["http-nio-9999"]
+2026-01-04 18:10:36.806 [main] INFO  c.x.SpringSecurityDemoApplication - [logStarted,56] - Started SpringSecurityDemoApplication in 8.071 seconds (process running for 12.276)
+2026-01-04 18:10:39.702 [SpringApplicationShutdownHook] INFO  c.a.d.p.DruidDataSource - [close,2204] - {dataSource-0} closing ...

@@ -24,6 +24,13 @@ knife4j:
   setting:
     language: zh_cn
     swagger-model-name: 实体类列表
+minio:
+  accessKey: minioadmin
+  secretKey: 2002101mama520
+  bucket: omni-agent
+  dir: chat
+  endpoint: http://110.42.210.113:9000
+
 logging:
   file:
     path: ./logs
